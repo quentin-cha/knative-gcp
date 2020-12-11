@@ -465,6 +465,7 @@ func (e *Exporter) sdWithDefaultTraceAttributes(sd *trace.SpanData) *trace.SpanD
 // This is useful if your program is ending and you do not
 // want to lose recent stats or spans.
 func (e *Exporter) Flush() {
+	fmt.Println("===== FLUSHING! =====")
 	e.statsExporter.Flush()
 	e.traceExporter.Flush()
 }

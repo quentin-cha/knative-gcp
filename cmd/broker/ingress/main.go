@@ -58,6 +58,7 @@ func main() {
 		logger.Desugar().Fatal("Failed to create project id", zap.Error(err))
 	}
 	logger.Desugar().Info("Starting ingress handler", zap.Any("envConfig", env), zap.Any("Project ID", projectID))
+	logger.Desugar().Info("NEW CODE")
 
 	ingress, err := InitializeHandler(
 		ctx,

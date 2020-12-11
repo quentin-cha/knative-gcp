@@ -239,4 +239,5 @@ func (h *Handler) reportMetrics(ctx context.Context, eventType string, statusCod
 	if err := h.reporter.ReportEventCount(ctx, args); err != nil {
 		logging.FromContext(ctx).Warn("Failed to record metrics.", zap.Error(err))
 	}
+	logging.FromContext(ctx).Error("BROKER EVENT COUNT")
 }

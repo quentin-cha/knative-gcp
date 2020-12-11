@@ -78,6 +78,7 @@ func main() {
 	targetsUpdateCh := make(chan struct{})
 
 	logger.Info("Starting the broker fanout")
+	logger.Info("NEW CODE")
 
 	projectID, err := utils.ProjectIDOrDefault("")
 	if err != nil {

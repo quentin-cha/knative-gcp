@@ -190,6 +190,8 @@ func getTaskValue() string {
 // handleUpload handles uploading a slice
 // of Data, as well as error handling.
 func (e *statsExporter) handleUpload(vds ...*view.Data) {
+
+	fmt.Println("UPLOAD STATS")
 	if err := e.uploadStats(vds); err != nil {
 		e.o.handleError(err)
 	}
@@ -200,8 +202,10 @@ func (e *statsExporter) handleUpload(vds ...*view.Data) {
 // This is useful if your program is ending and you do not
 // want to lose data that hasn't yet been exported.
 func (e *statsExporter) Flush() {
+	fmt.Println("STATS EXPORTER FLUSH")
 	e.viewDataBundler.Flush()
 	e.metricsBundler.Flush()
+	fmt.Println("STATS EXPORTER FLUSH DONE")
 }
 
 func (e *statsExporter) uploadStats(vds []*view.Data) error {

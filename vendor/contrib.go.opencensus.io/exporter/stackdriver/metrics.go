@@ -63,6 +63,7 @@ func (se *statsExporter) ExportMetrics(ctx context.Context, metrics []*metricdat
 }
 
 func (se *statsExporter) handleMetricsUpload(metrics []*metricdata.Metric) {
+	fmt.Println("UPLOAD METRICS")
 	err := se.uploadMetrics(metrics)
 	if err != nil {
 		se.o.handleError(err)
@@ -121,15 +122,18 @@ func (se *statsExporter) uploadMetrics(metrics []*metricdata.Metric) error {
 	}
 
 	numErrors := len(errors)
+	errMsgs := []string{}
+	for _, err := range errors {
+		errMsgs = append(errMsgs, err.Error())
+	}
+	fmt.Printf("ERROR UPLOAD METRICS: %d errors - [%s]\n", numErrors, strings.Join(errMsgs, "| "))
+
 	if numErrors == 0 {
 		return nil
 	} else if numErrors == 1 {
 		return errors[0]
 	}
-	errMsgs := make([]string, 0, numErrors)
-	for _, err := range errors {
-		errMsgs = append(errMsgs, err.Error())
-	}
+
 	return fmt.Errorf("[%s]", strings.Join(errMsgs, "; "))
 }
 
