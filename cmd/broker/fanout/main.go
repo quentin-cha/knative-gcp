@@ -107,7 +107,7 @@ func main() {
 	// Context will be done if a TERM signal is issued.
 	<-ctx.Done()
 	// Wait a grace period for the handlers to shutdown.
-	time.Sleep(30 * time.Second)
+	time.Sleep(70 * time.Second)
 	logger.Info("Done waiting, exit.")
 }
 

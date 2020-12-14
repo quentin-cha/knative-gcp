@@ -217,6 +217,7 @@ func newMetricsExporter(config *metricsConfig, logger *zap.SugaredLogger) (view.
 	}
 
 	ff := factory[config.backendDestination]
+	fmt.Println("BACKEND DESTINATION: ", config.backendDestination)
 	if ff == nil {
 		return nil, nil, fmt.Errorf("unsupported metrics backend %v", config.backendDestination)
 	}

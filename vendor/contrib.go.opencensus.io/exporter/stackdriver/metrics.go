@@ -112,7 +112,13 @@ func (se *statsExporter) uploadMetrics(metrics []*metricdata.Metric) error {
 			end = len(allTimeSeries)
 		}
 		batch := allTimeSeries[start:end]
+		for _, ts := range batch {
+			for _, p := range ts.Points {
+				fmt.Printf("UPLOAD METRIC TYPE: <%s>, POINT: <%s>\n", ts.Metric.GetType(), p.String())
+			}
+		}
 		ctsreql := se.combineTimeSeriesToCreateTimeSeriesRequest(batch)
+
 		for _, ctsreq := range ctsreql {
 			if err := createTimeSeries(ctx, se.c, ctsreq); err != nil {
 				span.SetStatus(trace.Status{Code: trace.StatusCodeUnknown, Message: err.Error()})
