@@ -4,6 +4,7 @@ package observability
 import (
 	"context"
 	"os"
+	"time"
 
 	gcpmetric "github.com/google/knative-gcp/pkg/metrics"
 	"go.uber.org/zap"
@@ -51,6 +52,9 @@ func setupTracingOrDie(configMapWatcher *configmap.InformedWatcher, logger *zap.
 
 // TODO: flush tracers
 func flushExporters(logger *zap.SugaredLogger) {
+	logger.Info("Sleeping 70 seconds to let flush timer kick in")
+	time.Sleep(70 * time.Second)
+
 	gcpmetric.FlushTriggerEventCount()
 	gcpmetric.FlushBrokerEventCount()
 	b := metrics.FlushExporter()

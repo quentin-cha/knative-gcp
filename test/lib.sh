@@ -119,9 +119,9 @@ function install_cloud_run_events_from_latest_release() {
 function kill_all_broker_pods() {
   header ">> killing all broker pods"
   kubectl delete pods -n cloud-run-events -l brokerCell=default
-  sleep 60
-  header ">> killing all broker pods"
-  kubectl delete pods -n cloud-run-events -l brokerCell=default  
+  sleep 30
+  #header ">> killing all broker pods"
+  #kubectl delete pods -n cloud-run-events -l brokerCell=default  
   wait_until_pods_running cloud-run-events || return 1
 }
 

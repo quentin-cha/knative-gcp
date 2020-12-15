@@ -40,7 +40,7 @@ func TestEventingUpgrades(t *testing.T) {
 				PostUpgradeTest(),
 			},
 			PostDowngrade: []pkgupgrade.Operation{
-				//PostDowngradeTest(),
+				PostDowngradeTest(),
 			},
 			Continual: []pkgupgrade.BackgroundOperation{
 				ContinualTest(),
@@ -57,7 +57,7 @@ func TestEventingUpgrades(t *testing.T) {
 				//NoOp(),
 			},
 			DowngradeWith: []pkgupgrade.Operation{
-				//installation.KillPods(),
+				installation.KillPods(),
 				//installation.GitHead(),
 				//NoOp(),
 			},
