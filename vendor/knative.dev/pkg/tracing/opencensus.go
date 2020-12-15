@@ -133,6 +133,9 @@ func WithExporterFull(name, host string, logger *zap.SugaredLogger) ConfigOption
 		case config.Stackdriver:
 			exp, err := stackdriver.NewExporter(stackdriver.Options{
 				ProjectID: cfg.StackdriverProjectID,
+				OnError: func(err error) {
+					fmt.Printf("===StackDriver Trace Exporter OnError: %v", err)
+				},
 			})
 			if err != nil {
 				logger.Errorw("error reading project-id from metadata", zap.Error(err))

@@ -195,6 +195,9 @@ func newStackdriverExporter(config *metricsConfig, logger *zap.SugaredLogger) (v
 		DefaultMonitoringLabels: &sd.Labels{},
 		Timeout:                 stackdriverAPITimeout,
 		BundleCountThreshold:    TestOverrideBundleCount,
+		OnError: func(err error) {
+			fmt.Printf("===StackDriver Exporter OnError: %v", err)
+		},
 	})
 	if err != nil {
 		logger.Errorw("Failed to create the Stackdriver exporter: ", zap.Error(err))
