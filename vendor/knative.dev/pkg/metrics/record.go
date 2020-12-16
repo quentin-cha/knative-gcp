@@ -27,6 +27,7 @@ import (
 
 // Record stores the given Measurement from `ms` in the current metrics backend.
 func Record(ctx context.Context, ms stats.Measurement, ros ...stats.Options) {
+	//fmt.Printf("RECORD - value: <%f>, name: <%s>\n", ms.Value(), ms.Measure().Name())
 	getCurMetricsConfig().record(ctx, []stats.Measurement{ms}, ros...)
 }
 

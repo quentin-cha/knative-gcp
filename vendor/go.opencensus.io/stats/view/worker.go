@@ -207,6 +207,10 @@ func (w *worker) Record(tags *tag.Map, ms interface{}, attachments map[string]in
 		attachments: attachments,
 		t:           time.Now(),
 	}
+	for _, m := range req.ms {
+		fmt.Printf("WORKER RECORD - value: <%f>, name: <%s>\n", m.Value(), m.Measure().Name())
+	}
+
 	w.c <- req
 }
 

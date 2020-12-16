@@ -37,10 +37,10 @@ func TestEventingUpgrades(t *testing.T) {
 				PreUpgradeTest(),
 			},
 			PostUpgrade: []pkgupgrade.Operation{
-				PostUpgradeTest(),
+				//PostUpgradeTest(),
 			},
 			PostDowngrade: []pkgupgrade.Operation{
-				PostDowngradeTest(),
+				//PostDowngradeTest(),
 			},
 			Continual: []pkgupgrade.BackgroundOperation{
 				ContinualTest(),

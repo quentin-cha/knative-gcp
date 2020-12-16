@@ -55,6 +55,7 @@ func (se *statsExporter) ExportMetrics(ctx context.Context, metrics []*metricdat
 	}
 
 	for _, metric := range metrics {
+		fmt.Println("EXPORT METRIC TO BUNDLE: ", metric.Descriptor.Name)
 		se.metricsBundler.Add(metric, 1)
 		// TODO: [rghetia] handle errors.
 	}

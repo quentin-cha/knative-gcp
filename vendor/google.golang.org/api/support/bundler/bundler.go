@@ -14,6 +14,7 @@ package bundler
 import (
 	"context"
 	"errors"
+	"fmt"
 	"reflect"
 	"sync"
 	"time"
@@ -127,6 +128,7 @@ type bundle struct {
 func (bu *bundle) add(item interface{}, size int) {
 	bu.items = reflect.Append(bu.items, reflect.ValueOf(item))
 	bu.size += size
+	fmt.Printf("ADD TO BUNDLER: <%+v>, <%d>\n", bu.items, bu.size)
 }
 
 // NewBundler creates a new Bundler.
@@ -141,6 +143,7 @@ func (bu *bundle) add(item interface{}, size int) {
 // Configure the Bundler by setting its thresholds and limits before calling
 // any of its methods.
 func NewBundler(itemExample interface{}, handler func(interface{})) *Bundler {
+	fmt.Println("NEW BUNDLER")
 	b := &Bundler{
 		DelayThreshold:       DefaultDelayThreshold,
 		BundleCountThreshold: DefaultBundleCountThreshold,
@@ -167,30 +170,36 @@ func (b *Bundler) initSemaphores() {
 // handled immediately if we are below HandlerLimit. It requires that b.mu is
 // locked.
 func (b *Bundler) enqueueCurBundle() {
+	fmt.Println("ENQUEUE CUR BUNDLE START")
 	// We don't require callers to check if there is a pending bundle. It
 	// may have already been appended to the queue. If so, return early.
 	if b.curBundle == nil {
+		fmt.Println("NO BUNDLE TO HANDLE")
 		return
 	}
 	// If we are below the HandlerLimit, the queue must be empty. Handle
 	// immediately with a new goroutine.
 	if b.handlerCount < b.HandlerLimit {
 		b.handlerCount++
+		fmt.Println("INVOKE BUNDLER HANDLER")
 		go b.handle(b.curBundle)
 	} else if b.tail != nil {
 		// There are bundles on the queue, so append to the end
 		b.tail.next = b.curBundle
 		b.tail = b.curBundle
+		fmt.Println("APPEND TO QUEUE")
 	} else {
 		// The queue is empty, so initialize the queue
 		b.head = b.curBundle
 		b.tail = b.curBundle
+		fmt.Println("INTIALIZE QUEUE")
 	}
 	b.curBundle = nil
 	if b.flushTimer != nil {
 		b.flushTimer.Stop()
 		b.flushTimer = nil
 	}
+	fmt.Println("ENQUEUE CUR BUNDLE END")
 }
 
 // setMode sets the state of Bundler's mode. If mode was defined before
@@ -375,6 +384,7 @@ func (b *Bundler) AddWait(ctx context.Context, item interface{}, size int) error
 // Flush invokes the handler for all remaining items in the Bundler and waits
 // for it to return.
 func (b *Bundler) Flush() {
+	fmt.Println("BUNDLER FLUSH START")
 	b.mu.Lock()
 
 	// If a curBundle is pending, move it to the queue.
@@ -404,4 +414,5 @@ func (b *Bundler) Flush() {
 
 	// Allow the next flush to finish.
 	close(next)
+	fmt.Println("BUNDLER FLUSH END")
 }

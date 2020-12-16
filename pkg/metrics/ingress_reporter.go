@@ -91,6 +91,7 @@ type IngressReporter struct {
 
 func (r *IngressReporter) ReportEventCount(ctx context.Context, args IngressReportArgs) error {
 	atomic.AddUint64(&brokerEventCount, 1)
+	fmt.Println("REPORT BROKER EVENT")
 	// Count does not support exemplar currently, but keeping this anyway for future support.
 	attachments := getSpanContextAttachments(ctx)
 	metrics.Record(

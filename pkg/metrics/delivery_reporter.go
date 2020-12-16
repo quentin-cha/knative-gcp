@@ -136,6 +136,7 @@ func NewDeliveryReporter(podName PodName, containerName ContainerName) (*Deliver
 // ReportEventDispatchTime captures dispatch times.
 func (r *DeliveryReporter) ReportEventDispatchTime(ctx context.Context, d time.Duration) {
 	atomic.AddUint64(&triggerEventCount, 1)
+	fmt.Println("REPORT TRIGGER EVENT")
 
 	attachments := getSpanContextAttachments(ctx)
 	// convert time.Duration in nanoseconds to milliseconds.

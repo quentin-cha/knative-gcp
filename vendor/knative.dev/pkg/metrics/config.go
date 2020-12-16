@@ -176,6 +176,7 @@ func (mc *metricsConfig) record(ctx context.Context, mss []stats.Measurement, ro
 
 		return stats.RecordWithOptions(ctx, append(ros, stats.WithMeasurements(mss...))...)
 	}
+	//fmt.Println("METRIC CONFIG RECORDER: ", runtime.FuncForPC(reflect.ValueOf(mc.recorder).Pointer()).Name())
 	return mc.recorder(ctx, mss, ros...)
 }
 
@@ -271,6 +272,7 @@ func createMetricsConfig(ctx context.Context, ops ExporterOptions) (*metricsConf
 		}
 
 		mc.recorder = sdCustomMetricsRecorder(mc, allowCustomMetrics)
+		fmt.Println("CREATING STACKDRIVER METRIC RECORDER")
 
 		if scc.UseSecret {
 			secret, err := getStackdriverSecret(ctx, ops.Secrets)
