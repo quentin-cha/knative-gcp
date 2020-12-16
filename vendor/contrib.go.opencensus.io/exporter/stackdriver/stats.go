@@ -203,6 +203,7 @@ func (e *statsExporter) handleUpload(vds ...*view.Data) {
 // want to lose data that hasn't yet been exported.
 func (e *statsExporter) Flush() {
 	fmt.Println("STATS EXPORTER FLUSH")
+	e.ir.Stop()
 	e.viewDataBundler.Flush()
 	e.metricsBundler.Flush()
 	fmt.Println("STATS EXPORTER FLUSH DONE")

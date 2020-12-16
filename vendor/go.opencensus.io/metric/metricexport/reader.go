@@ -142,6 +142,7 @@ func (ir *IntervalReader) Start() error {
 }
 
 func (ir *IntervalReader) startInternal() {
+	fmt.Println("INTERNAL READER STARTED, REPORTING INTERVAL: ", ir.ReportingInterval)
 	for {
 		select {
 		case <-ir.timer.C:
@@ -157,6 +158,7 @@ func (ir *IntervalReader) startInternal() {
 // Stop stops the reader from reading and exporting metrics.
 // Additional call to Stop are no-ops.
 func (ir *IntervalReader) Stop() {
+	fmt.Println("INTERNAL READER STOPPED")
 	if ir == nil {
 		return
 	}
@@ -170,6 +172,9 @@ func (ir *IntervalReader) Stop() {
 	close(ir.quit)
 	close(ir.done)
 	ir.quit = nil
+	// before exit, do one last round of export
+	fmt.Println("INTERNAL READER LAST EXPORT")
+	ir.reader.ReadAndExport(ir.exporter)
 }
 
 // ReadAndExport reads metrics from all producer registered with
@@ -183,5 +188,6 @@ func (r *Reader) ReadAndExport(exporter Exporter) {
 		data = append(data, producer.Read()...)
 	}
 	// TODO: [rghetia] add metrics for errors.
+	fmt.Println("INTERNAL READER READ AND EXPORT")
 	exporter.ExportMetrics(ctx, data)
 }

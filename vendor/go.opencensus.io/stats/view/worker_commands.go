@@ -163,7 +163,7 @@ func (cmd *recordReq) handleCommand(w *worker) {
 		}
 		ref := w.getMeasureRef(m.Measure().Name())
 		for v := range ref.views {
-			fmt.Printf("WORKER COMMAND HANDLER - ADD SAMPLE: value: <%f>, name: <%s>\n", m.Value(), m.Measure().Name())
+			//fmt.Printf("WORKER COMMAND HANDLER - ADD SAMPLE: value: <%f>, name: <%s>\n", m.Value(), m.Measure().Name())
 			v.addSample(cmd.tm, m.Value(), cmd.attachments, cmd.t)
 		}
 	}
