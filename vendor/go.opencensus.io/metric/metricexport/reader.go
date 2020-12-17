@@ -172,8 +172,10 @@ func (ir *IntervalReader) Stop() {
 	close(ir.quit)
 	close(ir.done)
 	ir.quit = nil
-	// before exit, do one last round of export
-	fmt.Println("INTERNAL READER LAST EXPORT")
+}
+
+func (ir *IntervalReader) Flush() {
+	fmt.Println("FLUSING INTERNAL READER")
 	ir.reader.ReadAndExport(ir.exporter)
 }
 

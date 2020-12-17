@@ -154,10 +154,9 @@ func (p *Processor) deliver(ctx context.Context, target *config.Target, broker *
 		if errors.As(err, &result) && result.Timeout() {
 			// If the delivery is cancelled because of timeout, report event dispatch time without resp status code.
 			p.StatsReporter.ReportEventDispatchTime(ctx, time.Since(startTime))
-			logging.FromContext(ctx).Error("TRIGGER EVENT COUNT")
-			return err
+			//logging.FromContext(ctx).Error("TRIGGER EVENT COUNT")
 		}
-		logging.FromContext(ctx).Warn("CRAZY ERROR", zap.Error(err))
+		logging.FromContext(ctx).Error("CRAZY ERROR", zap.Error(err))
 		return err
 	}
 
@@ -174,7 +173,7 @@ func (p *Processor) deliver(ctx context.Context, target *config.Target, broker *
 	}
 	// Report event dispatch time with resp status code.
 	p.StatsReporter.ReportEventDispatchTime(cctx, time.Since(startTime))
-	logging.FromContext(ctx).Error("TRIGGER EVENT COUNT")
+	//logging.FromContext(ctx).Error("TRIGGER EVENT COUNT")
 
 	if resp.StatusCode/100 != 2 {
 		return fmt.Errorf("event delivery failed: HTTP status code %d", resp.StatusCode)

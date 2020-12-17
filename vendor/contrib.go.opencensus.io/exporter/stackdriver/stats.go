@@ -204,6 +204,11 @@ func (e *statsExporter) handleUpload(vds ...*view.Data) {
 func (e *statsExporter) Flush() {
 	fmt.Println("STATS EXPORTER FLUSH")
 	e.ir.Stop()
+	e.ir.Flush()
+	delay := 20 * time.Second
+	fmt.Println("STACKDRIVER COOL OFF: ", delay)
+	time.Sleep(delay)
+	fmt.Println("FLUSHING BUNDLERS....")
 	e.viewDataBundler.Flush()
 	e.metricsBundler.Flush()
 	fmt.Println("STATS EXPORTER FLUSH DONE")

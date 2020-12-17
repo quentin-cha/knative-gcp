@@ -226,7 +226,7 @@ func sdCustomMetricsRecorder(mc metricsConfig, allowCustomMetrics bool) func(con
 			metricType := path.Join(mc.stackdriverMetricTypePrefix, m.Measure().Name())
 			t, ok := metricToResourceLabels[metricType]
 			if ok || allowCustomMetrics {
-				fmt.Println("RECORDING - sdCustomMetricsRecorder: ", metricType)
+				//fmt.Println("RECORDING - sdCustomMetricsRecorder: ", metricType)
 				if metricsByResource[t] == nil {
 					metricsByResource[t] = make([]stats.Measurement, 0, len(mss))
 				}

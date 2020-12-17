@@ -143,7 +143,6 @@ func (bu *bundle) add(item interface{}, size int) {
 // Configure the Bundler by setting its thresholds and limits before calling
 // any of its methods.
 func NewBundler(itemExample interface{}, handler func(interface{})) *Bundler {
-	fmt.Println("NEW BUNDLER")
 	b := &Bundler{
 		DelayThreshold:       DefaultDelayThreshold,
 		BundleCountThreshold: DefaultBundleCountThreshold,
@@ -187,12 +186,10 @@ func (b *Bundler) enqueueCurBundle() {
 		// There are bundles on the queue, so append to the end
 		b.tail.next = b.curBundle
 		b.tail = b.curBundle
-		fmt.Println("APPEND TO QUEUE")
 	} else {
 		// The queue is empty, so initialize the queue
 		b.head = b.curBundle
 		b.tail = b.curBundle
-		fmt.Println("INTIALIZE QUEUE")
 	}
 	b.curBundle = nil
 	if b.flushTimer != nil {
