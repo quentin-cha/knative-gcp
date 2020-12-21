@@ -49,7 +49,7 @@ TIMEOUT=${TIMEOUT:-30m}
 go_test_e2e \
   -tags=upgrade \
   -timeout="${TIMEOUT}" \
-  ./test/upgrade \
+  ./test/upgrade -run="^TestEventingUpgrades$" \
   || fail_test
 
 success
