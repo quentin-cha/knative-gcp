@@ -175,7 +175,7 @@ func deploymentTemplate(args Args, containers []corev1.Container) *appsv1.Deploy
 						},
 					},
 					Containers:                    containers,
-					TerminationGracePeriodSeconds: ptr.Int64(60),
+					TerminationGracePeriodSeconds: ptr.Int64(120),
 				},
 			},
 		},

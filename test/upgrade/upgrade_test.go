@@ -48,18 +48,29 @@ func TestEventingUpgrades(t *testing.T) {
 		},
 		Installations: pkgupgrade.Installations{
 			Base: []pkgupgrade.Operation{
-				installation.LatestStable(),
-			},
-			UpgradeWith: []pkgupgrade.Operation{
+				//installation.LatestStable(),
 				installation.GitHead(),
 			},
+			UpgradeWith: []pkgupgrade.Operation{
+				installation.KillPods(),
+				//installation.GitHead(),
+				//NoOp(),
+			},
 			DowngradeWith: []pkgupgrade.Operation{
-				installation.LatestStable(),
+				installation.KillPods(),
+				//installation.GitHead(),
+				//NoOp(),
 			},
 		},
 	}
 	c := newUpgradeConfig(t)
 	suite.Execute(c)
+}
+
+func NoOp() pkgupgrade.Operation {
+	return pkgupgrade.NewOperation("NoOp", func(c pkgupgrade.Context) {
+		c.Log.Info("Performing NoOp..")
+	})
 }
 
 func newUpgradeConfig(t *testing.T) pkgupgrade.Configuration {

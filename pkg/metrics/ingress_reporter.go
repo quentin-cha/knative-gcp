@@ -20,12 +20,19 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"sync/atomic"
 
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/tag"
 	"knative.dev/pkg/metrics"
 )
+
+var brokerEventCount uint64
+
+func FlushBrokerEventCount() {
+	fmt.Println("FLUSH BROKER EVENT COUNT: ", brokerEventCount)
+}
 
 // stats_exporter is adapted from knative.dev/eventing/pkg/broker/ingress/stats_reporter.go
 // with the following changes:
@@ -83,6 +90,8 @@ type IngressReporter struct {
 }
 
 func (r *IngressReporter) ReportEventCount(ctx context.Context, args IngressReportArgs) error {
+	atomic.AddUint64(&brokerEventCount, 1)
+	fmt.Println("REPORT BROKER EVENT")
 	// Count does not support exemplar currently, but keeping this anyway for future support.
 	attachments := getSpanContextAttachments(ctx)
 	metrics.Record(

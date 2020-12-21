@@ -112,6 +112,10 @@ func RecordWithOptions(ctx context.Context, ros ...Options) error {
 	recorder := internal.DefaultRecorder
 	if o.recorder != nil {
 		recorder = o.recorder.Record
+		// fp := reflect.ValueOf(recorder).Pointer()
+		// f := runtime.FuncForPC(fp)
+		// fileName, lineNumber := f.FileLine(fp)
+		// fmt.Printf("USING o.recorder.Record: <%s:%d> <%s>\n", fileName, lineNumber, f.Name())
 	}
 	if recorder == nil {
 		return nil

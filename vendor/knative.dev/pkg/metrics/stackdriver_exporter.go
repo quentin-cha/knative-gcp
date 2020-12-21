@@ -195,6 +195,9 @@ func newStackdriverExporter(config *metricsConfig, logger *zap.SugaredLogger) (v
 		DefaultMonitoringLabels: &sd.Labels{},
 		Timeout:                 stackdriverAPITimeout,
 		BundleCountThreshold:    TestOverrideBundleCount,
+		OnError: func(err error) {
+			fmt.Printf("===StackDriver Exporter OnError: %v", err)
+		},
 	})
 	if err != nil {
 		logger.Errorw("Failed to create the Stackdriver exporter: ", zap.Error(err))
@@ -223,6 +226,7 @@ func sdCustomMetricsRecorder(mc metricsConfig, allowCustomMetrics bool) func(con
 			metricType := path.Join(mc.stackdriverMetricTypePrefix, m.Measure().Name())
 			t, ok := metricToResourceLabels[metricType]
 			if ok || allowCustomMetrics {
+				//fmt.Println("RECORDING - sdCustomMetricsRecorder: ", metricType)
 				if metricsByResource[t] == nil {
 					metricsByResource[t] = make([]stats.Measurement, 0, len(mss))
 				}

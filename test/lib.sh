@@ -107,12 +107,23 @@ function install_cloud_run_events_from_head() {
 }
 
 function install_cloud_run_events_from_latest_release() {
+
   header ">> Installing Cloud Run Events latest public release"
   local url="https://github.com/google/knative-gcp/releases/download/${LATEST_RELEASE_VERSION}"
   local yaml="cloud-run-events.yaml"
 
   install_cloud_run_events \
-    "${url}/${yaml}" || return 1
+   "${url}/${yaml}" || return 1
+}
+
+function kill_all_broker_pods() {
+  header ">> killing all broker pods"
+  kubectl delete pods -n cloud-run-events -l brokerCell=default
+  header ">> sleep for 45 seconds"
+  sleep 45
+  header ">> killing all broker pods"
+  kubectl delete pods -n cloud-run-events -l brokerCell=default  
+  wait_until_pods_running cloud-run-events || return 1
 }
 
 function istio_patch() {

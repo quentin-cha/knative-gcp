@@ -31,6 +31,8 @@ import (
 	"knative.dev/pkg/metrics"
 	"knative.dev/pkg/metrics/metricskey"
 
+	"sync/atomic"
+
 	"github.com/google/knative-gcp/pkg/broker/config"
 )
 
@@ -39,6 +41,12 @@ type DeliveryMetricsKey int
 const (
 	startDeliveryProcessingTime DeliveryMetricsKey = iota
 )
+
+var triggerEventCount uint64
+
+func FlushTriggerEventCount() {
+	fmt.Println("FLUSH TRIGGER EVENT COUNT: ", triggerEventCount)
+}
 
 type DeliveryReporter struct {
 	podName               PodName
@@ -127,6 +135,9 @@ func NewDeliveryReporter(podName PodName, containerName ContainerName) (*Deliver
 
 // ReportEventDispatchTime captures dispatch times.
 func (r *DeliveryReporter) ReportEventDispatchTime(ctx context.Context, d time.Duration) {
+	atomic.AddUint64(&triggerEventCount, 1)
+	fmt.Println("REPORT TRIGGER EVENT")
+
 	attachments := getSpanContextAttachments(ctx)
 	// convert time.Duration in nanoseconds to milliseconds.
 	metrics.Record(ctx, r.dispatchTimeInMsecM.M(float64(d/time.Millisecond)), stats.WithAttachments(attachments))

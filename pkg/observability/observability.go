@@ -5,6 +5,7 @@ import (
 	"context"
 	"os"
 
+	gcpmetric "github.com/google/knative-gcp/pkg/metrics"
 	"go.uber.org/zap"
 	"knative.dev/pkg/configmap"
 	"knative.dev/pkg/injection/sharedmain"
@@ -50,8 +51,15 @@ func setupTracingOrDie(configMapWatcher *configmap.InformedWatcher, logger *zap.
 
 // TODO: flush tracers
 func flushExporters(logger *zap.SugaredLogger) {
+	//logger.Info("Sleeping 70 seconds to let flush timer kick in")
+	//time.Sleep(70 * time.Second)
+
+	gcpmetric.FlushTriggerEventCount()
+	gcpmetric.FlushBrokerEventCount()
+	b := metrics.FlushExporter()
+	logger.Error("FLUSHED EXPORTERS: ", b)
 	logger.Sync()
-	metrics.FlushExporter()
+
 	os.Stdout.Sync()
 	os.Stderr.Sync()
 }

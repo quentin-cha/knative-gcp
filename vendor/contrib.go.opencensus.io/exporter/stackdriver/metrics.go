@@ -55,6 +55,7 @@ func (se *statsExporter) ExportMetrics(ctx context.Context, metrics []*metricdat
 	}
 
 	for _, metric := range metrics {
+		fmt.Println("EXPORT METRIC TO BUNDLE: ", metric.Descriptor.Name)
 		se.metricsBundler.Add(metric, 1)
 		// TODO: [rghetia] handle errors.
 	}
@@ -63,6 +64,7 @@ func (se *statsExporter) ExportMetrics(ctx context.Context, metrics []*metricdat
 }
 
 func (se *statsExporter) handleMetricsUpload(metrics []*metricdata.Metric) {
+	fmt.Println("UPLOAD METRICS")
 	err := se.uploadMetrics(metrics)
 	if err != nil {
 		se.o.handleError(err)
@@ -111,7 +113,13 @@ func (se *statsExporter) uploadMetrics(metrics []*metricdata.Metric) error {
 			end = len(allTimeSeries)
 		}
 		batch := allTimeSeries[start:end]
+		for _, ts := range batch {
+			for _, p := range ts.Points {
+				fmt.Printf("UPLOAD METRIC TYPE: <%s>, POINT: <%s>\n", ts.Metric.GetType(), p.String())
+			}
+		}
 		ctsreql := se.combineTimeSeriesToCreateTimeSeriesRequest(batch)
+
 		for _, ctsreq := range ctsreql {
 			if err := createTimeSeries(ctx, se.c, ctsreq); err != nil {
 				span.SetStatus(trace.Status{Code: trace.StatusCodeUnknown, Message: err.Error()})
@@ -121,15 +129,18 @@ func (se *statsExporter) uploadMetrics(metrics []*metricdata.Metric) error {
 	}
 
 	numErrors := len(errors)
+	errMsgs := []string{}
+	for _, err := range errors {
+		errMsgs = append(errMsgs, err.Error())
+	}
+	fmt.Printf("ERROR UPLOAD METRICS: %d errors - [%s]\n", numErrors, strings.Join(errMsgs, "| "))
+
 	if numErrors == 0 {
 		return nil
 	} else if numErrors == 1 {
 		return errors[0]
 	}
-	errMsgs := make([]string, 0, numErrors)
-	for _, err := range errors {
-		errMsgs = append(errMsgs, err.Error())
-	}
+
 	return fmt.Errorf("[%s]", strings.Join(errMsgs, "; "))
 }
 
