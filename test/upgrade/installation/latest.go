@@ -35,3 +35,18 @@ func LatestStable() pkgupgrade.Operation {
 		}
 	})
 }
+func KillPods() pkgupgrade.Operation {
+	return pkgupgrade.NewOperation("KillAllBrokerPods", func(c pkgupgrade.Context) {
+		ops := []string{
+			"kill_all_broker_pods",
+		}
+		for _, shellfunc := range ops {
+			c.Log.Info("Running shell function: ", shellfunc)
+			err := callShellFunction(shellfunc)
+			if err != nil {
+				c.T.Error(err)
+				return
+			}
+		}
+	})
+}

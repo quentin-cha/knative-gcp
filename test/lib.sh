@@ -125,3 +125,10 @@ function knative_eventing_config_tracing() {
   header "Updating ConfigMap knative-eventing/config-tracing"
   kubectl replace -f "test/e2e/config/knative-eventing-config-tracing.yaml" || return 1
 }
+
+function kill_all_broker_pods() {
+  header ">> killing all broker pods"
+  kubectl delete pods -n cloud-run-events -l brokerCell=default
+  header ">> sleep for 45 seconds"
+  sleep 45
+}

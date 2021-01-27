@@ -200,6 +200,30 @@ func (e *statsExporter) handleUpload(vds ...*view.Data) {
 // This is useful if your program is ending and you do not
 // want to lose data that hasn't yet been exported.
 func (e *statsExporter) Flush() {
+	// To avoid losing metrics when flushing, we do the following:
+
+	// Stop the internal reader so nothing will periodically move data into bundlers.
+	e.ir.Stop()
+	// Manually invoke flush to move data into bundlers one last time.
+	e.ir.Flush()
+
+	// At this point, we have all the metrics in the bundlers and to avoid losing metrics,
+	// we must ensure at least one successful upload to stackdriver from this point on.
+	//
+	// After flushing, we may exceed bundlers capacity threshold and trigger an upload.
+	// Periodic upload may also take place.
+	// To avoid uploading to stackdriver too frequently, we sleep for 20 seconds, then flush all
+	// bundlers.
+	// 20 seconds is picked based on experimentation.
+	time.Sleep(20 * time.Second)
+
+	// Flush all bundlers.
+	// At this point, any of the following may happen:
+	// - Flushing internal reader above triggered an upload, the bundlers are now empty and we are done.
+	// - Periodic bundler upload happened before we flush the internal readers, but we have waited
+	//		sufficiently long to upload to stackdriver again, and no metric is lost.
+	// - Periodic bundler upload happened after we flush the interal readers, the bundlers are now
+	//		empty and we are done.
 	e.viewDataBundler.Flush()
 	e.metricsBundler.Flush()
 }

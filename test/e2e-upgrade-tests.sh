@@ -51,7 +51,7 @@ export GO_TEST_VERBOSITY=standard-verbose
 go_test_e2e \
   -tags=upgrade \
   -timeout="${TIMEOUT}" \
-  ./test/upgrade \
+  ./test/upgrade -run="^TestEventingUpgrades$" \
   || fail_test
 
 success

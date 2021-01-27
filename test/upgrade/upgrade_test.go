@@ -48,13 +48,15 @@ func TestEventingUpgrades(t *testing.T) {
 		},
 		Installations: pkgupgrade.Installations{
 			Base: []pkgupgrade.Operation{
-				installation.LatestStable(),
-			},
-			UpgradeWith: []pkgupgrade.Operation{
 				installation.GitHead(),
 			},
+			UpgradeWith: []pkgupgrade.Operation{
+				//installation.GitHead(),
+				installation.KillPods(),
+			},
 			DowngradeWith: []pkgupgrade.Operation{
-				installation.LatestStable(),
+				//installation.LatestStable(),
+				installation.KillPods(),
 			},
 		},
 	}

@@ -172,6 +172,12 @@ func (ir *IntervalReader) Stop() {
 	ir.quit = nil
 }
 
+// Flush flushes the metrics by invoking ReadAndExport immediately.
+// The reader itself is not stopped and the timer is not reset.
+func (ir *IntervalReader) Flush() {
+	ir.reader.ReadAndExport(ir.exporter)
+}
+
 // ReadAndExport reads metrics from all producer registered with
 // producer manager and then exports them using provided exporter.
 func (r *Reader) ReadAndExport(exporter Exporter) {
